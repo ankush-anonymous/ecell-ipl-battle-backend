@@ -1,0 +1,14 @@
+
+const  = require("../models/{{camelCase name}}Model.js")
+
+
+//sample
+const postName = async (name) => {
+const result = await User.create({
+name,
+});
+return result;
+};
+module.exports = {
+postName,
+};

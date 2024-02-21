@@ -1,0 +1,14 @@
+const mongoose = require("mongoose");
+
+const {{camelCase name}}Schema = new mongoose.Schema({ 
+//sample
+name: {
+type: String,
+required: [true, "Please provide name"],
+maxlength: 50,
+minlength: 3,
+},
+
+})
+
+module.exports = mongoose.model("{{camelCase name}}", {{camelCase name}}Schema);
