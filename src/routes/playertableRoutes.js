@@ -12,7 +12,7 @@ const {
 router.route('/getAllPlayers').get(getAllPlayers)
 router.route('/getAllPlayers').post(createPlayer)
 router.route('/getPlayerById:id').get(getPlayerById)
-router.route('/updatePlayerById:id').patch(updatePlayer)
-router.route('/deletePlayerById:id').delete(deletePlayer)
+router.route('/updatePlayerById/:id').patch(updatePlayer)
+router.route('/deletePlayerById/:id').delete(deletePlayer)
 
 module.exports = router
