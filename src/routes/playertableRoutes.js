@@ -11,7 +11,7 @@ const {
 
 router.route('/getAllPlayers').get(getAllPlayers)
 router.route('/createPlayers').post(createPlayer)
-router.route('/getPlayerById:id').get(getPlayerById)
+router.route('/getPlayerById/:id').get(getPlayerById)
 router.route('/updatePlayerById/:id').patch(updatePlayer)
 router.route('/deletePlayerById/:id').delete(deletePlayer)
 

@@ -11,7 +11,7 @@ const {
 
 router.route('/getAllAuctioners').get(getAllAuctioners)
 router.route('/createAuctioners').post(createAuctioner)
-router.route('/getAuctionerById:id').get(getAuctionerById)
+router.route('/getAuctionerById/:id').get(getAuctionerById)
 router.route('/updateAuctionerById/:id').patch(updateAuctioner)
 router.route('/deleteAuctionerById/:id').delete(deleteAuctioner)
 
