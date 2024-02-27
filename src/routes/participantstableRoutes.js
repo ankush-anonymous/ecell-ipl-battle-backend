@@ -9,7 +9,11 @@ const {
   deleteParticipant
 } = require('../controllers/participantstableController')
 
-router.route('/').get(getAllParticipants).post(createParticipant)
-router.route('/:id').get(getParticipantById).patch(updateParticipant).delete(deleteParticipant)
+router.route('/getAllParticipants').get(getAllParticipants)
+router.route('/getAllParticipants').post(createParticipant)
+router.route('/getParticipantById:id').get(getParticipantById)
+router.route('/updateParticipantById:id').patch(updateParticipant)
+router.route('/deleteParticipantById:id').delete(deleteParticipant)
+
 
 module.exports = router

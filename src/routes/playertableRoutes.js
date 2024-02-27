@@ -9,7 +9,10 @@ const {
   deletePlayer
 } = require('../controllers/playertableController')
 
-router.route('/').get(getAllPlayers).post(createPlayer)
-router.route('/:id').get(getPlayerById).patch(updatePlayer).delete(deletePlayer)
+router.route('/getAllPlayers').get(getAllPlayers)
+router.route('/getAllPlayers').post(createPlayer)
+router.route('/getPlayerById:id').get(getPlayerById)
+router.route('/updatePlayerById:id').patch(updatePlayer)
+router.route('/deletePlayerById:id').delete(deletePlayer)
 
 module.exports = router

@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 
-const playertableSchema = new mongoose.Schema({     
-    
+const playertableSchema = new mongoose.Schema({ 
+    image:{
+      type:String,
+    } ,   
       firstname: {
         type: String,
         required: [true, 'Please provide name  '],
@@ -48,7 +50,7 @@ const playertableSchema = new mongoose.Schema({
         type:Number,
       },
       overseasflag:{
-        type:String,
+        type:Boolean,
       },
       soldby:{
         type:String,

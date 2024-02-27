@@ -3,8 +3,56 @@ const asyncWrapper = require('../middleware/async');
 const { createCustomError } = require('../errors/custom-api');
 
 const getAllParticipants = asyncWrapper(async (req, res) => {
-  const participant = await Participant.find({});
-  res.status(200).json({ success: true, data: participant });
+  const { teamname,username,password,sort, fields, numericFilters } = req.query;
+  const queryObject = {};
+  if (teamname) {
+    queryObject.teamname = { $regex: teamname, $options: 'i' };
+  }
+  if (username) {
+    queryObject.username = { $regex: username, $options: 'i' };
+  }
+  if (password) {
+    queryObject.username = { $regex: password, $options: 'i' };
+  }
+  if (numericFilters) {
+    const operatorMap = {
+      '>': '$gt',
+      '>=': '$gte',
+      '=': '$eq',
+      '<': '$lt',
+      '<=': '$lte',
+    };
+    const regEx = /\b(<|>|>=|=|<|<=)\b/g;
+    let filters = numericFilters.replace(
+      regEx,
+      (match) => `-${operatorMap[match]}-`
+    );
+    const options = ['score','balanceamount','Playercount','Batsmancount','Bowlercount','Wicketkeepercount','Allroundercount','Overseascount','auctionerID'];
+    filters = filters.split(',').forEach((item) => {
+      const [field, operator, value] = item.split('-');
+      if (options.includes(field)) {
+        queryObject[field] = { [operator]: Number(value) };
+      }
+    });
+  }
+
+  let result = Participant.find(queryObject);
+    if (sort) {
+    const sortList = sort.split(',').join(' ');
+    result = result.sort(sortList);
+  }
+
+  if (fields) {
+    const fieldsList = fields.split(',').join(' ');
+    result = result.select(fieldsList);
+  }
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  result = result.skip(skip).limit(limit);
+  const participants = await result;
+  res.status(200).json({ participants, nbHits: participants.length });
 });
 
 const createParticipant = asyncWrapper(async (req, res, next) => {
