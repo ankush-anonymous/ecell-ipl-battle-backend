@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 const participantSchema = new mongoose.Schema({
   auctioneerID: {
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
+    required: [true, "Please provide Auctioneer ID  "],
   },
   teamname: {
     type: String,
@@ -12,7 +13,7 @@ const participantSchema = new mongoose.Schema({
   },
   iplTeamName: {
     type: String,
-    required: [true, "Please provide name  "],
+    required: [true, "Please provide IPL team name  "],
     maxlength: 50,
     minlength: 3,
   },
@@ -29,7 +30,7 @@ const participantSchema = new mongoose.Schema({
   score: {
     type: Number,
   },
-  balancemount: {
+  balanceAmount: {
     type: Number,
   },
   Playercount: {

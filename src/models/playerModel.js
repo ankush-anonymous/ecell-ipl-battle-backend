@@ -52,11 +52,5 @@ const playerSchema = new mongoose.Schema({
   overseasflag: {
     type: Boolean,
   },
-  soldby: {
-    type: String,
-  },
-  bidwonby: {
-    type: String,
-  },
 });
 module.exports = mongoose.model("player", playerSchema);

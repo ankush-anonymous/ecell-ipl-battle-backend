@@ -42,11 +42,6 @@ const auctioneerSchema = new mongoose.Schema({
   },
 });
 
-auctioneerSchema.pre("save", async function () {
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-});
-
 auctioneerSchema.methods.createJWT = function () {
   return jwt.sign(
     {
@@ -59,11 +54,6 @@ auctioneerSchema.methods.createJWT = function () {
       expiresIn: process.env.JWT_LIFETIME,
     }
   );
-};
-
-auctioneerSchema.methods.comparePassword = async function (candidatePassword) {
-  const isMatch = await bcrypt.compare(candidatePassword, this.password);
-  return isMatch;
 };
 
 module.exports = mongoose.model("auctioneer", auctioneerSchema);

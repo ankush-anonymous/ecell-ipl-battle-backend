@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(cors());
 
 const PlayerRouter = require("./routes/playersRoutes");
-const ParticipantRouter = require("./routes/playersRoutes");
+const ParticipantRouter = require("./routes/participantsRoutes");
 const auctioneerRouter = require("./routes/auctioneerRoutes");
 const SuperUserRouter = require("./routes/superUserRoutes");
 
