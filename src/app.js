@@ -9,9 +9,10 @@ const authenticateUser = require("./middleware/authentication");
 app.use(express.json());
 app.use(cors());
 
-const PlayerRouter =require("./routes/playertableRoutes");
-const ParticipantRouter =require("./routes/participantstableRoutes");
-const AuctionerRouter =require("./routes/auctionertableRoutes");
+const PlayerRouter = require("./routes/playersRoutes");
+const ParticipantRouter = require("./routes/playersRoutes");
+const auctioneerRouter = require("./routes/auctioneerRoutes");
+const SuperUserRouter = require("./routes/superUserRoutes");
 
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
@@ -23,7 +24,8 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/players", PlayerRouter);
 app.use("/api/v1/participants", ParticipantRouter);
-app.use("/api/v1/auctioners", AuctionerRouter);
+app.use("/api/v1/auctioneers", auctioneerRouter);
+app.use("/api/v1/superUser", SuperUserRouter);
 
 const port = process.env.PORT || 5000;
 

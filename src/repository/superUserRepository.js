@@ -1,5 +1,5 @@
 
-const  = require("../models/auctioneertableModel.js")
+const  = require("../models/superUserModel.js")
 
 
 //sample

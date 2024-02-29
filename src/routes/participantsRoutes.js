@@ -7,7 +7,7 @@ const {
   getParticipantById,
   updateParticipant,
   deleteParticipant,
-} = require("../controllers/participantstableController");
+} = require("../controllers/participantsController");
 
 router.route("/getAllParticipants").get(getAllParticipants);
 router.route("/createParticipant").post(createParticipant);

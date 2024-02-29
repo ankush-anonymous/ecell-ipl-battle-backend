@@ -1,54 +1,75 @@
-const Player = require('../models/playertableModel');
-const asyncWrapper = require('../middleware/async');
-const { createCustomError } = require('../errors/custom-api');
+const Player = require("../models/playerModel");
+const asyncWrapper = require("../middleware/async");
+const { createCustomError } = require("../errors/custom-api");
 
 const getAllPlayers = asyncWrapper(async (req, res) => {
-  const { firstname,surname,country,Specialism,BattingStyle,BowlingStyle,soldby,bidwonby,overseasflag,sort, fields, numericFilters } = req.query;
+  const {
+    firstname,
+    surname,
+    country,
+    Specialism,
+    BattingStyle,
+    BowlingStyle,
+    soldby,
+    bidwonby,
+    overseasflag,
+    sort,
+    fields,
+    numericFilters,
+  } = req.query;
   const queryObject = {};
 
   if (overseasflag) {
-    queryObject.overseasflag = overseasflag === 'true' ? true : false;
+    queryObject.overseasflag = overseasflag === "true" ? true : false;
   }
   if (firstname) {
-    queryObject.firstname = { $regex: firstname, $options: 'i' };
+    queryObject.firstname = { $regex: firstname, $options: "i" };
   }
   if (surname) {
-    queryObject.surname = { $regex: surname, $options: 'i' };
+    queryObject.surname = { $regex: surname, $options: "i" };
   }
   if (country) {
-    queryObject.country = { $regex: country, $options: 'i' };
+    queryObject.country = { $regex: country, $options: "i" };
   }
   if (Specialism) {
-    queryObject.Specialism = { $regex: Specialism, $options: 'i' };
+    queryObject.Specialism = { $regex: Specialism, $options: "i" };
   }
   if (BattingStyle) {
-    queryObject.BattingStyle = { $regex: BattingStyle, $options: 'i' };
+    queryObject.BattingStyle = { $regex: BattingStyle, $options: "i" };
   }
   if (BowlingStyle) {
-    queryObject.BowlingStyle = { $regex: BowlingStyle, $options: 'i' };
+    queryObject.BowlingStyle = { $regex: BowlingStyle, $options: "i" };
   }
   if (soldby) {
-    queryObject.soldby = { $regex: soldby, $options: 'i' };
+    queryObject.soldby = { $regex: soldby, $options: "i" };
   }
   if (bidwonby) {
-    queryObject.bidwonby = { $regex: bidwonby, $options: 'i' };
+    queryObject.bidwonby = { $regex: bidwonby, $options: "i" };
   }
   if (numericFilters) {
     const operatorMap = {
-      '>': '$gt',
-      '>=': '$gte',
-      '=': '$eq',
-      '<': '$lt',
-      '<=': '$lte',
+      ">": "$gt",
+      ">=": "$gte",
+      "=": "$eq",
+      "<": "$lt",
+      "<=": "$lte",
     };
     const regEx = /\b(<|>|>=|=|<|<=)\b/g;
     let filters = numericFilters.replace(
       regEx,
       (match) => `-${operatorMap[match]}-`
     );
-    const options = ['Age','testcaps','odicaps','t20caps','iplrating','reserverprice',''];
-    filters = filters.split(',').forEach((item) => {
-      const [field, operator, value] = item.split('-');
+    const options = [
+      "Age",
+      "testcaps",
+      "odicaps",
+      "t20caps",
+      "iplrating",
+      "reserverprice",
+      "",
+    ];
+    filters = filters.split(",").forEach((item) => {
+      const [field, operator, value] = item.split("-");
       if (options.includes(field)) {
         queryObject[field] = { [operator]: Number(value) };
       }
@@ -56,13 +77,13 @@ const getAllPlayers = asyncWrapper(async (req, res) => {
   }
 
   let result = Player.find(queryObject);
-    if (sort) {
-    const sortList = sort.split(',').join(' ');
+  if (sort) {
+    const sortList = sort.split(",").join(" ");
     result = result.sort(sortList);
   }
 
   if (fields) {
-    const fieldsList = fields.split(',').join(' ');
+    const fieldsList = fields.split(",").join(" ");
     result = result.select(fieldsList);
   }
   const page = Number(req.query.page) || 1;
