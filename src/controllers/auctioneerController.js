@@ -49,53 +49,19 @@ const loginAuctioneer = async (req, res) => {
 };
 
 const getAllAuctioneer = asyncWrapper(async (req, res) => {
-  const { username, password, sort, fields, numericFilters } = req.query;
+  const { username, password } = req.query;
   const queryObject = {};
   if (username) {
     queryObject.username = { $regex: username, $options: "i" };
   }
   if (password) {
-    queryObject.username = { $regex: password, $options: "i" };
-  }
-  if (numericFilters) {
-    const operatorMap = {
-      ">": "$gt",
-      ">=": "$gte",
-      "=": "$eq",
-      "<": "$lt",
-      "<=": "$lte",
-    };
-    const regEx = /\b(<|>|>=|=|<|<=)\b/g;
-    let filters = numericFilters.replace(
-      regEx,
-      (match) => `-${operatorMap[match]}-`
-    );
-    const options = ["currentplayercount"];
-    filters = filters.split(",").forEach((item) => {
-      const [field, operator, value] = item.split("-");
-      if (options.includes(field)) {
-        queryObject[field] = { [operator]: Number(value) };
-      }
-    });
+    queryObject.password = { $regex: password, $options: "i" }; // Fixed property name
   }
 
-  let result = Auctioneer.find(queryObject);
-  if (sort) {
-    const sortList = sort.split(",").join(" ");
-    result = result.sort(sortList);
-  }
+  // Await the execution of the Mongoose query and convert the result to an array
+  const result = await Auctioneer.find(queryObject).lean(); // Use lean() to get plain JS objects
 
-  if (fields) {
-    const fieldsList = fields.split(",").join(" ");
-    result = result.select(fieldsList);
-  }
-  const page = Number(req.query.page) || 1;
-  const limit = Number(req.query.limit) || 10;
-  const skip = (page - 1) * limit;
-
-  result = result.skip(skip).limit(limit);
-  const auctioneers = await result;
-  res.status(200).json({ auctioneers, nbHits: auctioneers.length });
+  res.status(200).json({ result, nbHits: result.length });
 });
 
 const createAuctioneer = asyncWrapper(async (req, res, next) => {
@@ -110,7 +76,6 @@ const createAuctioneer = asyncWrapper(async (req, res, next) => {
       auctioneerName: req.body.auctioneerName,
       coAuctioneerPhone: req.body.coAuctioneerPhone,
       auctioneerPhone: req.body.auctioneerPhone,
-      currentPlayerCount: req.body.currentPlayerCount,
       roomNo: req.body.roomNo,
     });
 
@@ -124,44 +89,65 @@ const createAuctioneer = asyncWrapper(async (req, res, next) => {
 });
 
 const getAuctioneerById = asyncWrapper(async (req, res, next) => {
-  const { id: auctioneerID } = req.params;
-  const auctioneer = await Auctioneer.findOne({ _id: auctioneerID });
-  if (!auctioneer) {
-    return next(
-      createCustomError(`No auctioneer with id: ${auctioneerID}`, 404)
-    );
+  try {
+    const { id: auctioneerID } = req.params;
+    const auctioneer = await Auctioneer.findOne({ _id: auctioneerID });
+    if (!auctioneer) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: `No auctioneer with id: ${auctioneerID}` });
+    }
+    res.status(200).json({ success: true, data: auctioneer });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error retrieving auctioneer By id",
+      error: error.message,
+    });
   }
-  res.status(200).json({ success: true, data: auctioneer });
 });
 
 const deleteAuctioneerById = asyncWrapper(async (req, res, next) => {
-  const { id: auctioneerID } = req.params;
-  const auctioneer = await Auctioneer.findOneAndDelete({ _id: auctioneerID });
-  if (!auctioneer) {
-    return next(
-      createCustomError(`No auctioneer  with id: ${auctioneerID}`, 404)
-    );
+  try {
+    const { id: auctioneerID } = req.params;
+    const auctioneer = await Auctioneer.findOneAndDelete({
+      _id: auctioneerID,
+    });
+    if (!auctioneer) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Entry not found or not deleted" });
+    }
+    res.status(StatusCodes.OK).json({ message: "Entry deleted successfully" });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error deleting entry",
+      error: error.message,
+    });
   }
-  res.status(200).json({ success: true, data: auctioneer });
 });
 
 const updateAuctioneerById = asyncWrapper(async (req, res, next) => {
-  const { id: auctioneerID } = req.params;
-  const auctioneer = await Auctioneer.findOneAndUpdate(
-    { _id: auctioneerID },
-    req.body,
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
-
-  if (!auctioneer) {
-    return next(
-      createCustomError(`No auctioneer with id: ${auctioneerID}`, 404)
+  try {
+    const { id: auctioneerID } = req.params;
+    const auctioneer = await Auctioneer.findOneAndUpdate(
+      { _id: auctioneerID },
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
     );
-  }
-  res.status(200).json({ success: true, data: auctioneer });
+
+    if (!auctioneer) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Entry not found or not updated" });
+    }
+    res.status(StatusCodes.OK).json({
+      message: "Entry updated successfully",
+      result: updatedDetails,
+    });
+  } catch (error) {}
 });
 
 module.exports = {

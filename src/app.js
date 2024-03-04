@@ -13,6 +13,7 @@ const PlayerRouter = require("./routes/playersRoutes");
 const ParticipantRouter = require("./routes/participantsRoutes");
 const auctioneerRouter = require("./routes/auctioneerRoutes");
 const SuperUserRouter = require("./routes/superUserRoutes");
+const BiddingTransitRouter = require("./routes/biddingTransitRoutes");
 
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
@@ -26,6 +27,7 @@ app.use("/api/v1/players", PlayerRouter);
 app.use("/api/v1/participants", ParticipantRouter);
 app.use("/api/v1/auctioneers", auctioneerRouter);
 app.use("/api/v1/superUser", SuperUserRouter);
+app.use("/api/v1/bid", BiddingTransitRouter);
 
 const port = process.env.PORT || 5000;
 

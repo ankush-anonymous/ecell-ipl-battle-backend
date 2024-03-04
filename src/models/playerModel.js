@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const playerSchema = new mongoose.Schema({
+  playerNo: {
+    type: Number,
+    required: [true, "Please provide playerNo"],
+  },
   image: {
     type: String,
   },
@@ -8,7 +12,7 @@ const playerSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide name  "],
     maxlength: 50,
-    minlength: 3,
+    // minlength: ,
   },
   surname: {
     type: String,
@@ -34,22 +38,22 @@ const playerSchema = new mongoose.Schema({
   BowlingStyle: {
     type: String,
   },
-  testcaps: {
+  testCaps: {
     type: Number,
   },
-  odicaps: {
+  odiCaps: {
     type: Number,
   },
-  t20caps: {
+  t20Caps: {
     type: Number,
   },
-  iplrating: {
+  iplRating: {
     type: Number,
   },
-  reserverprice: {
+  reserverPrice: {
     type: Number,
   },
-  overseasflag: {
+  overseasFlag: {
     type: Boolean,
   },
 });

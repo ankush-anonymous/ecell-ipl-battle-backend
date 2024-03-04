@@ -2,6 +2,7 @@ const Participant = require("../models/participantsModel");
 const asyncWrapper = require("../middleware/async");
 const { createCustomError } = require("../errors/custom-api");
 const generateUniqueId = require("generate-unique-id");
+const { StatusCodes } = require("http-status-codes");
 
 const generateUserName = () => {
   const randomCharacters = generateUniqueId({
@@ -19,6 +20,36 @@ const generatePassword = () => {
     useNumbers: true,
   });
   return randomCharacters;
+};
+
+const loginParticipant = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: `No participant found` });
+    }
+
+    const user = await Participant.findOne({ username, password });
+    if (!user) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: `No participant found` });
+    }
+
+    const token = user.createJWT();
+    res.status(StatusCodes.ACCEPTED).json({
+      user,
+      token,
+    });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error logging in user",
+      error: error.message,
+    });
+  }
 };
 
 const getAllParticipants = asyncWrapper(async (req, res) => {
@@ -90,6 +121,27 @@ const deleteParticipant = asyncWrapper(async (req, res, next) => {
   res.status(200).json({ success: true, data: participant });
 });
 
+const deleteAllParticipant = async (req, res) => {
+  try {
+    const result = await Participant.deleteMany({});
+    if (!result) {
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ success: false, message: "Failed to delete players." });
+    }
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: "All participants deleted successfully.",
+    });
+  } catch (error) {
+    console.error("Error deleting participants:", error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: "An error occurred while deleting participants.",
+    });
+  }
+};
+
 const updateParticipant = asyncWrapper(async (req, res, next) => {
   const { id: participantID } = req.params;
   const participant = await Participant.findOneAndUpdate(
@@ -110,9 +162,11 @@ const updateParticipant = asyncWrapper(async (req, res, next) => {
 });
 
 module.exports = {
+  loginParticipant,
   getAllParticipants,
   createParticipant,
   getParticipantById,
   updateParticipant,
   deleteParticipant,
+  deleteAllParticipant,
 };

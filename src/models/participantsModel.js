@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const participantSchema = new mongoose.Schema({
   auctioneerID: {
@@ -29,28 +31,51 @@ const participantSchema = new mongoose.Schema({
   },
   score: {
     type: Number,
+    default: 0,
   },
   balanceAmount: {
     type: Number,
   },
-  Playercount: {
+  PlayerCount: {
+    type: Number,
+    default: 0,
+  },
+  BatsmanCount: {
+    type: Number,
+    default: 0,
+  },
+  BowlerCount: {
+    type: Number,
+    default: 0,
+  },
+  WicketKeeperCount: {
+    type: Number,
+    default: 0,
+  },
+  AllRounderCount: {
+    type: Number,
+    default: 0,
+  },
+  OverseasCount: {
     type: Number,
   },
-  Batsmancount: {
+  NonOverSeasCount: {
     type: Number,
-  },
-  Bowlercount: {
-    type: Number,
-  },
-  Wicketkeepercount: {
-    type: Number,
-  },
-  Allroundercount: {
-    type: Number,
-  },
-  Overseascount: {
-    type: Number,
+    default: 0,
   },
 });
+
+participantSchema.methods.createJWT = function () {
+  return jwt.sign(
+    {
+      password: this.password,
+      balanceAmount: this.balanceAmount,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_LIFETIME,
+    }
+  );
+};
 
 module.exports = mongoose.model("participants", participantSchema);

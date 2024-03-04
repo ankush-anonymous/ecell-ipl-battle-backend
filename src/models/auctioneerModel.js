@@ -39,6 +39,7 @@ const auctioneerSchema = new mongoose.Schema({
   },
   currentPlayerCount: {
     type: Number,
+    default: 1,
   },
 });
 
