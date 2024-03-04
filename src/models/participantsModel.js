@@ -58,6 +58,11 @@ const participantSchema = new mongoose.Schema({
   },
   OverseasCount: {
     type: Number,
+    default: 0,
+  },
+  StarCount: {
+    type: Number,
+    default: 0,
   },
   NonOverSeasCount: {
     type: Number,

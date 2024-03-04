@@ -36,13 +36,22 @@ const getAllBiddingTransit = async (req, res) => {
 };
 
 const getBiddingTransitById = async (req, res) => {
-  const { id: transitId } = req.params;
-  const transit = await Transit.findOne({ _id: transitId });
+  try {
+    const { id: transitId } = req.params;
+    const transit = await Transit.findOne({ _id: transitId });
 
-  if (!transit) {
-    return next(createCustomError(`No Transit with id: ${playerID}`, 404));
+    if (!transit) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: `No transaction with id: ${transitId}` });
+    }
+    res.status(200).json({ success: true, data: transit });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error retrieving transaction By id",
+      error: error.message,
+    });
   }
-  res.status(200).json({ success: true, data: transit });
 };
 
 const deleteBiddingTransit = async (req, res) => {

@@ -145,9 +145,14 @@ const updateAuctioneerById = asyncWrapper(async (req, res, next) => {
     }
     res.status(StatusCodes.OK).json({
       message: "Entry updated successfully",
-      result: updatedDetails,
+      result: auctioneer,
     });
-  } catch (error) {}
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error updating auctioneer entry",
+      error: error.message,
+    });
+  }
 });
 
 module.exports = {

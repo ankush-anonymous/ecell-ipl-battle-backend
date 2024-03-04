@@ -142,23 +142,34 @@ const deleteAllParticipant = async (req, res) => {
   }
 };
 
-const updateParticipant = asyncWrapper(async (req, res, next) => {
-  const { id: participantID } = req.params;
-  const participant = await Participant.findOneAndUpdate(
-    { _id: participantID },
-    req.body,
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
+const updateParticipant = asyncWrapper(async (req, res) => {
+  try {
+    const { id: participantID } = req.params;
 
-  if (!participant) {
-    return next(
-      createCustomError(`No participant with id: ${participantID}`, 404)
+    const participant = await Participant.findOneAndUpdate(
+      { _id: participantID },
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
     );
+
+    if (!participant) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Entry not found or not updated" });
+    }
+    res.status(StatusCodes.OK).json({
+      message: "Entry updated successfully",
+      result: participant,
+    });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error updating entry",
+      error: error.message,
+    });
   }
-  res.status(200).json({ success: true, data: participant });
 });
 
 module.exports = {

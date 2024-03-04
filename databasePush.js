@@ -25,6 +25,14 @@ const processRow = async (row, index) => {
       overSeasFlag = false;
     }
 
+    // Determine the value of isStarPlayer based on the value of the "Star Player" column
+    let isStarPlayer;
+    if (row["Star Player"] && row["Star Player"].toLowerCase() === "yes") {
+      isStarPlayer = true;
+    } else {
+      isStarPlayer = false;
+    }
+
     // Convert index to three-digit player number
     const playerNo = (index + 1).toString().padStart(3, "0");
 
@@ -39,6 +47,7 @@ const processRow = async (row, index) => {
       BowlingStyle: row["Bowling style"],
       iplRating: row["POINTS"],
       overSeasFlag: overSeasFlag,
+      isStarPlayer: isStarPlayer,
       playerNo: playerNo,
     };
 

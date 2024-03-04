@@ -23,12 +23,7 @@ const playerSchema = new mongoose.Schema({
   country: {
     type: String,
   },
-  DOB: {
-    type: Date,
-  },
-  Age: {
-    type: Number,
-  },
+
   Specialism: {
     type: String,
   },
@@ -38,22 +33,17 @@ const playerSchema = new mongoose.Schema({
   BowlingStyle: {
     type: String,
   },
-  testCaps: {
-    type: Number,
-  },
-  odiCaps: {
-    type: Number,
-  },
-  t20Caps: {
-    type: Number,
-  },
+
   iplRating: {
     type: Number,
   },
   reserverPrice: {
     type: Number,
   },
-  overseasFlag: {
+  overSeasFlag: {
+    type: Boolean,
+  },
+  isStarPlayer: {
     type: Boolean,
   },
 });
