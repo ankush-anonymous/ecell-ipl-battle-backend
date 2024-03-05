@@ -34,20 +34,7 @@ app.use((req, res, next) => {
 
   next();
 });
-// Set preflight
-app.options("*", (req, res) => {
-  console.log("preflight");
-  if (
-    req.headers.origin === "https://ecell-ipl-battle-backend.onrender.com" &&
-    allowMethods.includes(req.headers["access-control-request-method"]) &&
-    allowHeaders.includes(req.headers["access-control-request-headers"])
-  ) {
-    console.log("pass");
-    return res.status(204).send();
-  } else {
-    console.log("fail");
-  }
-});
+
 const PlayerRouter = require("./routes/playersRoutes");
 const ParticipantRouter = require("./routes/participantsRoutes");
 const auctioneerRouter = require("./routes/auctioneerRoutes");
