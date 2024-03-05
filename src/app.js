@@ -2,12 +2,17 @@ require("dotenv").config();
 require("express-async-errors");
 const express = require("express");
 const app = express();
-const cors = require("cors");
 //connectDB
 const connectDB = require("../db/connect");
 const authenticateUser = require("./middleware/authentication");
 app.use(express.json());
-app.use(cors());
+const cors = require("cors");
+const corsOptions = {
+  origin: "https://ecell-ipl-battle.vercel.app",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
 
 const PlayerRouter = require("./routes/playersRoutes");
 const ParticipantRouter = require("./routes/participantsRoutes");
