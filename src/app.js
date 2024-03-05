@@ -36,11 +36,16 @@ const start = async () => {
     await connectDB(process.env.MONGO_URI);
 
     app.listen(port, () =>
-      console.log(`LenderApp Server is listening on port ${port}...`)
+      console.log(`iplBattle Server is listening on port ${port}...`)
     );
   } catch (error) {
     console.log(error);
   }
 };
+
+// Middleware for root endpoint
+app.get("/", (req, res) => {
+  res.send("Server listening successfully on port " + port);
+});
 
 start();

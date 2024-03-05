@@ -98,14 +98,21 @@ const createParticipant = asyncWrapper(async (req, res, next) => {
 });
 
 const getParticipantById = asyncWrapper(async (req, res, next) => {
-  const { id: participantID } = req.params;
-  const participant = await Participant.findOne({ _id: participantID });
-  if (!participant) {
-    return next(
-      createCustomError(`No participant with id: ${participantID}`, 404)
-    );
+  try {
+    const { id: participantID } = req.params;
+    const participant = await Participant.findOne({ _id: participantID });
+    if (!participant) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: `No participant with id: ${participantID}` });
+    }
+    res.status(200).json({ success: true, data: participant });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Error retrieving participant By id",
+      error: error.message,
+    });
   }
-  res.status(200).json({ success: true, data: participant });
 });
 
 const deleteParticipant = asyncWrapper(async (req, res, next) => {
