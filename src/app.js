@@ -8,7 +8,7 @@ const authenticateUser = require("./middleware/authentication");
 app.use(express.json());
 const cors = require("cors");
 const corsOptions = {
-  origin: "https://ecell-ipl-battle-jy0zbry6u-tutorloks-projects.vercel.app/",
+  origin: "https://ecell-ipl-battle.vercel.app/",
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 };
@@ -17,7 +17,7 @@ app.use(cors(corsOptions));
 app.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
-    "https://ecell-ipl-battle-jy0zbry6u-tutorloks-projects.vercel.app/"
+    "https://ecell-ipl-battle.vercel.app/"
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
