@@ -3,58 +3,66 @@ const asyncWrapper = require("../middleware/async");
 const { createCustomError } = require("../errors/custom-api");
 
 const getAllPlayers = asyncWrapper(async (req, res) => {
-  const {
-    firstname,
-    surname,
-    country,
-    Specialism,
-    BattingStyle,
-    BowlingStyle,
-    soldby,
-    bidwonby,
-    overseasflag,
-    playerNo,
-  } = req.query;
-  const queryObject = {};
+  try {
+    const {
+      firstname,
+      surname,
+      country,
+      Specialism,
+      BattingStyle,
+      BowlingStyle,
+      soldby,
+      bidwonby,
+      overseasflag,
+      playerNo,
+    } = req.query;
+    const queryObject = {};
 
-  if (overseasflag) {
-    queryObject.overseasflag = overseasflag === "true" ? true : false;
-  }
-  if (firstname) {
-    queryObject.firstname = { $regex: firstname, $options: "i" };
-  }
-  if (surname) {
-    queryObject.surname = { $regex: surname, $options: "i" };
-  }
-  if (country) {
-    queryObject.country = { $regex: country, $options: "i" };
-  }
-  if (Specialism) {
-    queryObject.Specialism = { $regex: Specialism, $options: "i" };
-  }
-  if (BattingStyle) {
-    queryObject.BattingStyle = { $regex: BattingStyle, $options: "i" };
-  }
-  if (BowlingStyle) {
-    queryObject.BowlingStyle = { $regex: BowlingStyle, $options: "i" };
-  }
-  if (soldby) {
-    queryObject.soldby = { $regex: soldby, $options: "i" };
-  }
-  if (bidwonby) {
-    queryObject.bidwonby = { $regex: bidwonby, $options: "i" };
-  }
-  if (playerNo) {
-    queryObject.playerNo = playerNo;
-  }
+    if (overseasflag) {
+      queryObject.overseasflag = overseasflag === "true" ? true : false;
+    }
+    if (firstname) {
+      queryObject.firstname = { $regex: firstname, $options: "i" };
+    }
+    if (surname) {
+      queryObject.surname = { $regex: surname, $options: "i" };
+    }
+    if (country) {
+      queryObject.country = { $regex: country, $options: "i" };
+    }
+    if (Specialism) {
+      queryObject.Specialism = { $regex: Specialism, $options: "i" };
+    }
+    if (BattingStyle) {
+      queryObject.BattingStyle = { $regex: BattingStyle, $options: "i" };
+    }
+    if (BowlingStyle) {
+      queryObject.BowlingStyle = { $regex: BowlingStyle, $options: "i" };
+    }
+    if (soldby) {
+      queryObject.soldby = { $regex: soldby, $options: "i" };
+    }
+    if (bidwonby) {
+      queryObject.bidwonby = { $regex: bidwonby, $options: "i" };
+    }
+    if (playerNo) {
+      queryObject.playerNo = playerNo;
+    }
 
-  const players = await Player.find(queryObject);
-  res.status(200).json({ players, nbHits: players.length });
+    const players = await Player.find(queryObject);
+    res.status(200).json({ players, nbHits: players.length });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 const createPlayer = asyncWrapper(async (req, res, next) => {
-  const player = await Player.create(req.body);
-  res.status(201).json({ success: true, data: player });
+  try {
+    const player = await Player.create(req.body);
+    res.status(201).json({ success: true, data: player });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 const getPlayerById = asyncWrapper(async (req, res, next) => {

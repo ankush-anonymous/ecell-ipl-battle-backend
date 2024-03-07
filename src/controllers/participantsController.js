@@ -91,7 +91,7 @@ const createParticipant = asyncWrapper(async (req, res, next) => {
     teamname: req.body.teamname,
     iplTeamLogo: req.body.iplTeamLogo,
     iplTeamName: req.body.iplTeamName,
-    balanceAmount: 50000,
+    balanceAmount: 700000000,
   });
   const createdParticipant = await participant.save();
   res.status(201).json({ success: true, data: createdParticipant });

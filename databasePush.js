@@ -3,7 +3,7 @@ const xlsx = require("xlsx");
 const axios = require("axios");
 
 // Read the Excel file
-const workbook = xlsx.readFile("players.xlsx"); // Update the file name to match your Excel file
+const workbook = xlsx.readFile("player2.xlsx"); // Update the file name to match your Excel file
 
 // Get the first worksheet from the Excel file
 const worksheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -19,7 +19,7 @@ const processRow = async (row, index) => {
   try {
     // Determine the value of overSeasFlag based on the value of the "Overseas" column
     let overSeasFlag;
-    if (row["Overseas"] && row["Overseas"].toLowerCase() === "oversesas") {
+    if (row["Oversesas"] && row["Oversesas"].toLowerCase() === "oversesas") {
       overSeasFlag = true;
     } else {
       overSeasFlag = false;
@@ -65,9 +65,9 @@ const processRow = async (row, index) => {
 
 // Process the first 5 rows
 (async () => {
-  for (let i = 0; i < Math.min(5, rows.length); i++) {
+  for (let i = 0; i < Math.min(204, rows.length); i++) {
     await processRow(rows[i], i);
   }
 
-  console.log("First 5 rows of the Excel file processed.");
+  console.log("First 10 rows of the Excel file processed.");
 })();

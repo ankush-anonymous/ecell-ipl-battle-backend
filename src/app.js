@@ -7,13 +7,14 @@ const connectDB = require("../db/connect");
 const authenticateUser = require("./middleware/authentication");
 app.use(express.json());
 const cors = require("cors");
+// app.use(cors());
 const corsOptions = {
   origin: "https://ecell-ipl-battle.vercel.app",
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 };
-app.use(cors(corsOptions));
 // Set middleware of CORS
+app.use(cors(corsOptions));
 app.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
